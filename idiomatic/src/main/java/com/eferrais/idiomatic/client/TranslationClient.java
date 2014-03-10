@@ -46,7 +46,7 @@ public class TranslationClient {
         }
     }
 
-    ;
+
 
     public void translationsForExpression(final String expression, final LANGUAGE fromLang, final LANGUAGE toLang, final ClientCallBack<List<Translation>> callBack) {
         String url = null;
@@ -101,6 +101,43 @@ public class TranslationClient {
         String updated = string.replaceAll("[\\r\\n\\w\\.-]+\\.[\\w]{1,3}", "");
         String noHtml = updated.toString().replaceAll("\\<.*?>","");
         return noHtml.replaceAll("\n " , "");
+    }
+
+    public void getSuggestion(String expression, final LANGUAGE fromLang, final LANGUAGE toLang, final ClientCallBack<String[]> callBack) {
+        String url = null;
+        try {
+            url = String.format("http://www.linguee.com/%s-%s/search?q=%s&limit=15&source=%s-%s", fromLang.getValue(), toLang.getValue(), URLEncoder.encode(expression, "UTF-8"), fromLang.getValue(), toLang.getValue());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+        Request<String[]> request = new Request<String[]>(Request.Method.GET, url, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        }) {
+            @Override
+            protected Response<String[]> parseNetworkResponse(NetworkResponse networkResponse) {
+                String result = null;
+                try {
+                    result = new String(networkResponse.data, "ISO-8859-15");
+                } catch (UnsupportedEncodingException e) {
+                    callBack.onResult(null, new Error(e.getMessage()));
+                }
+
+                String[] suggestions = result.split("\\|.*\r\n");
+
+                return Response.success(suggestions, HttpHeaderParser.parseCacheHeaders(networkResponse));
+            }
+
+            @Override
+            protected void deliverResponse(String[] result) {
+                callBack.onResult(result, null);
+            }
+        };
+        requestQueue.add(request);
     }
 
 }

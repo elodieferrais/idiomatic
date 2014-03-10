@@ -4,7 +4,9 @@
     <string name="app_name">Idiomatic</string>
 
     <!--Search Activity -->
-    <string name="language_hint_label">French</string>
+    <string name="language_hint_label">French or English</string>
+    <string name="welcome_screen_title">Welcome</string>
+    <string name="welcome_screen_description">Idiomatic gives you real world, human-made translations in their context.</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
