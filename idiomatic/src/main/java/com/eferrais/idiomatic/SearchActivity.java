@@ -18,6 +18,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.eferrais.idiomatic.adapter.TranslationsListAdapter;
 import com.eferrais.idiomatic.client.ClientCallBack;
 import com.eferrais.idiomatic.client.TranslationClient;
@@ -36,6 +37,8 @@ public class SearchActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Crashlytics.start(this);
+
         setContentView(R.layout.activity_search);
 
         if (savedInstanceState == null) {
