@@ -1,11 +1,11 @@
 package com.eferrais.idiomatic;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +26,6 @@ import com.eferrais.idiomatic.model.Translation;
 import net.yscs.android.square_progressbar.SquareProgressBar;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -59,9 +58,13 @@ public class SearchActivity extends FragmentActivity {
         //Loader
         private int progress = 0;
         private static final String COLOR_LOADER_START = "#FFFFFF";
-        private static final String COLOR_LOADER_END = "#7FDD4C";
+        private static final String COLOR_LOADER_END = "#227FBB";
+        private Timer progressTimer;
+        private static final int loaderFadeAnimationDuration = 400;
         //Views
         private SquareProgressBar progressBarToAnimate;
+        private SquareProgressBar squareProgressBarStart;
+        private SquareProgressBar squareProgressBarEnd;
         private View rootView;
         private AutoCompleteTextView editText;
         private TextView title;
@@ -84,9 +87,13 @@ public class SearchActivity extends FragmentActivity {
 
             rootView = inflater.inflate(R.layout.fragment_search, container, false);
             editText = (AutoCompleteTextView) rootView.findViewById(R.id.fragment_search_edittext);
+            editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
             title = (TextView) rootView.findViewById(R.id.fragment_search_welcome_title_textview);
             description = (TextView) rootView.findViewById(R.id.fragment_search_welcome_description_textview);
             listView = (ListView) rootView.findViewById(R.id.fragment_search_listview);
+            squareProgressBarStart = (SquareProgressBar) rootView.findViewById(R.id.fragment_search_start_progressbar);
+            squareProgressBarEnd = (SquareProgressBar) rootView.findViewById(R.id.fragment_search_end_progressbar);
+
 
             //Translations listview
             adapterTranslations = new TranslationsListAdapter(getActivity(), R.layout.translation_cell, translations);
@@ -105,14 +112,14 @@ public class SearchActivity extends FragmentActivity {
             //Welcome animation
             launchWelcomeAnimation();
 
+
+
             return rootView;
         }
 
         public void startProgressBar() {
             //Progress Bar
             progress = 0;
-            final SquareProgressBar squareProgressBarStart = (SquareProgressBar) rootView.findViewById(R.id.fragment_search_start_progressbar);
-            final SquareProgressBar squareProgressBarEnd = (SquareProgressBar) rootView.findViewById(R.id.fragment_search_end_progressbar);
             squareProgressBarStart.setImage(-1);
             squareProgressBarStart.setColor(COLOR_LOADER_START);
             squareProgressBarStart.setProgress(progress);
@@ -151,19 +158,62 @@ public class SearchActivity extends FragmentActivity {
 
                 }
             };
-            Timer progressTimer = new Timer();
+            progressTimer = new Timer();
             progressTimer.schedule(task, new Date(), 10);
+        }
+
+        private void stopProgressBar() {
+            if (progressTimer != null) {
+                progressTimer.cancel();
+                progressTimer.purge();
+                progressTimer = null;
+            }
+
+            AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
+            alphaAnimation.setDuration(loaderFadeAnimationDuration);
+            alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    progress = 0;
+                    squareProgressBarEnd.setProgress(progress);
+                    squareProgressBarStart.setProgress(progress);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            squareProgressBarEnd.startAnimation(alphaAnimation);
+            squareProgressBarStart.startAnimation(alphaAnimation);
+
         }
 
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+                if (editText.getText().toString().length() <=0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.error_title_empty_search)
+                            .setMessage(R.string.error_message_empty_search)
+                            .setIcon(android.R.drawable.ic_popup_reminder);
+                    builder.create().show();
+                    return true;
+                }
+                startProgressBar();
                 client.translationsForExpression(editText.getText().toString(), TranslationClient.LANGUAGE.FRENCH, TranslationClient.LANGUAGE.ENGLISH, new ClientCallBack<List<Translation>>() {
                     @Override
                     public void onResult(List<Translation> result, Error error) {
+                        stopProgressBar();
+                        title.setVisibility(View.GONE);
                         if (result != null && result.size() > 0) {
-                            title.setVisibility(View.GONE);
                             description.setVisibility(View.GONE);
+                        } else {
+                            description.setVisibility(View.VISIBLE);
+                            description.setText(R.string.search_no_results);
                         }
                         translations.clear();
                         translations.addAll(result);
@@ -190,6 +240,7 @@ public class SearchActivity extends FragmentActivity {
 
                         @Override
                         public void onAnimationEnd(Animation animation) {
+
                         }
 
                         @Override
@@ -213,11 +264,9 @@ public class SearchActivity extends FragmentActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            Log.d("ELODIE", s.toString());
             client.getSuggestion(s.toString(), TranslationClient.LANGUAGE.FRENCH, TranslationClient.LANGUAGE.ENGLISH, new ClientCallBack<String[]>() {
                 @Override
                 public void onResult(String[] result, Error error) {
-                    Log.d("ELODIE : " + String.valueOf(result.length), Arrays.asList(result).toString());
                     autoCompletionAdapter.clear();
                     autoCompletionAdapter.addAll(result);
                 }
