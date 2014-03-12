@@ -128,7 +128,9 @@ public class TranslationClient {
                 }
 
                 String[] suggestions = result.split("\\|.*\r\n");
-
+                for (int i = 0; i < suggestions.length; i++) {
+                    suggestions[i] = Html.fromHtml(suggestions[i]).toString();
+                }
                 return Response.success(suggestions, HttpHeaderParser.parseCacheHeaders(networkResponse));
             }
 

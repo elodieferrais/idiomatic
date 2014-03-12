@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
 
-    <style name="IdiomaticTheme" parent="android:Theme.Black.NoTitleBar.Fullscreen">
+    <style name="IdiomaticTheme" parent="android:Theme.Light.NoTitleBar.Fullscreen">
         <item name="android:textColor">@android:color/black</item>
     </style>
 

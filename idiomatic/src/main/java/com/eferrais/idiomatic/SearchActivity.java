@@ -46,6 +46,7 @@ public class SearchActivity extends FragmentActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
     }
 
     /**
@@ -97,7 +98,6 @@ public class SearchActivity extends FragmentActivity {
             squareProgressBarStart = (SquareProgressBar) rootView.findViewById(R.id.fragment_search_start_progressbar);
             squareProgressBarEnd = (SquareProgressBar) rootView.findViewById(R.id.fragment_search_end_progressbar);
 
-
             //Translations listview
             adapterTranslations = new TranslationsListAdapter(getActivity(), R.layout.translation_cell, translations);
             listView.setAdapter(adapterTranslations);
@@ -116,12 +116,13 @@ public class SearchActivity extends FragmentActivity {
             launchWelcomeAnimation();
 
 
-
             return rootView;
         }
 
+
         public void startProgressBar() {
             //Progress Bar
+
             progress = 0;
             squareProgressBarStart.setImage(-1);
             squareProgressBarStart.setColor(COLOR_LOADER_START);
@@ -197,8 +198,9 @@ public class SearchActivity extends FragmentActivity {
 
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
-                if (editText.getText().toString().length() <=0) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                editText.dismissDropDown();
+                if (editText.getText().toString().length() <= 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(R.string.error_title_empty_search)
                             .setMessage(R.string.error_message_empty_search)
@@ -233,7 +235,6 @@ public class SearchActivity extends FragmentActivity {
                 public void run() {
                     AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
                     alphaAnimation.setDuration(welcomeAnimationDuration);
-                    alphaAnimation.setFillAfter(true);
                     alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
@@ -280,5 +281,8 @@ public class SearchActivity extends FragmentActivity {
         @Override
         public void afterTextChanged(Editable s) {
         }
+
     }
+
+
 }

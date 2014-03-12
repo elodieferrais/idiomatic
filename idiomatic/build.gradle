@@ -20,10 +20,25 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    signingConfigs {
+        debug {
+            storeFile file (debugKeystore)
+        }
+
+        release {
+            storeFile file(idiomaticStoreFile)
+            storePassword idiomaticStorePassword
+            keyAlias idiomaticKeyAlias
+            keyPassword idiomaticKeyPassword
+        }
+    }
+
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
         }
     }
 }
