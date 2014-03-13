@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.eferrais.idiomatic.adapter.TranslationsListAdapter;
@@ -115,14 +116,16 @@ public class SearchActivity extends FragmentActivity {
             //Welcome animation
             launchWelcomeAnimation();
 
-
             return rootView;
         }
 
 
         public void startProgressBar() {
-            //Progress Bar
+            if (isSearching()) {
+                return;
+            }
 
+            //Progress Bar
             progress = 0;
             squareProgressBarStart.setImage(-1);
             squareProgressBarStart.setColor(COLOR_LOADER_START);
@@ -153,8 +156,6 @@ public class SearchActivity extends FragmentActivity {
                             progressBarToAnimate.setProgress(progress);
                             if (progress == 0) {
                                 progressBarToAnimate.bringToFront();
-                                squareProgressBarEnd.invalidate();
-                                squareProgressBarStart.invalidate();
                                 rootView.invalidate();
                             }
                         }
@@ -196,37 +197,8 @@ public class SearchActivity extends FragmentActivity {
 
         }
 
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                editText.dismissDropDown();
-                if (editText.getText().toString().length() <= 0) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(R.string.error_title_empty_search)
-                            .setMessage(R.string.error_message_empty_search)
-                            .setIcon(android.R.drawable.ic_popup_reminder);
-                    builder.create().show();
-                    return true;
-                }
-                startProgressBar();
-                client.translationsForExpression(editText.getText().toString(), TranslationClient.LANGUAGE.FRENCH, TranslationClient.LANGUAGE.ENGLISH, new ClientCallBack<List<Translation>>() {
-                    @Override
-                    public void onResult(List<Translation> result, Error error) {
-                        stopProgressBar();
-                        title.setVisibility(View.GONE);
-                        if (result != null && result.size() > 0) {
-                            description.setVisibility(View.GONE);
-                        } else {
-                            description.setVisibility(View.VISIBLE);
-                            description.setText(R.string.search_no_results);
-                        }
-                        translations.clear();
-                        translations.addAll(result);
-                        adapterTranslations.notifyDataSetChanged();
-                    }
-                });
-            }
-            return false;
+        private boolean isSearching() {
+            return (progressTimer != null);
         }
 
         private void launchWelcomeAnimation() {
@@ -261,6 +233,44 @@ public class SearchActivity extends FragmentActivity {
             timer.schedule(timerTask, welcomeAnimationDelay);
         }
 
+        /****TextView.OnEditorActionListener****/
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                editText.dismissDropDown();
+                if (editText.getText().toString().length() <= 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.error_title_empty_search)
+                            .setMessage(R.string.error_message_empty_search)
+                            .setIcon(android.R.drawable.ic_popup_reminder);
+                    builder.create().show();
+                    return true;
+                }
+                if (isSearching()) {
+                    client.removeTranslationsRequests();
+                }
+                startProgressBar();
+                client.translationsForExpression(editText.getText().toString(), TranslationClient.LANGUAGE.FRENCH, TranslationClient.LANGUAGE.ENGLISH, new ClientCallBack<List<Translation>>() {
+                    @Override
+                    public void onResult(List<Translation> result, Error error) {
+                        stopProgressBar();
+                        title.setVisibility(View.GONE);
+                        if (result != null && result.size() > 0) {
+                            description.setVisibility(View.GONE);
+                        } else {
+                            description.setVisibility(View.VISIBLE);
+                            description.setText(R.string.search_no_results);
+                        }
+                        translations.clear();
+                        translations.addAll(result);
+                        adapterTranslations.notifyDataSetChanged();
+                    }
+                });
+            }
+            return false;
+        }
+
+        /****TextWatcher****/
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 

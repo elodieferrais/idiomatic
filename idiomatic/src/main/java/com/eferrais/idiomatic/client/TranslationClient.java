@@ -26,6 +26,8 @@ import java.util.List;
  */
 public class TranslationClient {
     private RequestQueue requestQueue;
+    private static final String REQUEST_TRANSLATION_TAG = "request:translation:tag";
+    private static final String REQUEST_SUGGESTION_TAG = "request:suggestion:tag";
 
     public TranslationClient(Context context) {
         requestQueue = Volley.newRequestQueue(context);
@@ -94,6 +96,7 @@ public class TranslationClient {
                 callBack.onResult(result, null);
             }
         };
+        request.setTag(REQUEST_TRANSLATION_TAG);
         requestQueue.add(request);
     }
 
@@ -139,7 +142,12 @@ public class TranslationClient {
                 callBack.onResult(result, null);
             }
         };
+        request.setTag(REQUEST_SUGGESTION_TAG);
         requestQueue.add(request);
+    }
+
+    public void removeTranslationsRequests() {
+        requestQueue.cancelAll(REQUEST_TRANSLATION_TAG);
     }
 
 }
