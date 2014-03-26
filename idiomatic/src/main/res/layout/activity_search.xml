@@ -5,4 +5,4 @@
     android:layout_height="match_parent"
     tools:context="com.eferrais.idiomatic.SearchActivity"
     tools:ignore="MergeRootFrame"
-    android:background="#227FBB"/>
+    android:background="@color/window_background"/>

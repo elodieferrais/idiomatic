@@ -87,6 +87,7 @@ public class SearchActivity extends FragmentActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
             //Declare client to translate
             client = new TranslationClient(getActivity());
 
