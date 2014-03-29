@@ -55,7 +55,11 @@ public class SearchActivity extends FragmentActivity {
      */
     public static class PlaceholderFragment extends Fragment implements TextView.OnEditorActionListener, TextWatcher {
 
-        private List<Translation> translations = new ArrayList<Translation>();
+        private static final String KEY_SEARCH_VALUE = "com.eferrais.idiomatic:PlaceholderFragment:key_search_value";
+        private static final String KEY_RESULT_VALUE = "com.eferrais.idiomatic:PlaceholderFragment:key_result_value";
+        private static final String KEY_IS_SEARCHING = "com.eferrais.idiomatic:PlaceholderFragment:key_is_searching";
+
+        private ArrayList<Translation> translations = new ArrayList<Translation>();
         private List<String> suggestions = new ArrayList<String>();
         //Welcome
         private static final int welcomeAnimationDuration = 600;
@@ -88,10 +92,34 @@ public class SearchActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
+            rootView = inflater.inflate(R.layout.fragment_search, container, false);
+            init();
+
+            if (savedInstanceState != null) {
+                String searchText = savedInstanceState.getString(KEY_SEARCH_VALUE);
+                editText.setText(searchText);
+
+                if (savedInstanceState.getBoolean(KEY_IS_SEARCHING, false)) {
+                    startProgressBar();
+                } else {
+                    ArrayList<Translation>  translationArrayList = savedInstanceState.getParcelableArrayList(KEY_RESULT_VALUE);
+                    translations.addAll(translationArrayList);
+                    adapterTranslations.notifyDataSetChanged();
+                }
+
+
+            } else {
+                //Welcome animation
+                launchWelcomeAnimation();
+            }
+
+            return rootView;
+        }
+
+        private void init() {
             //Declare client to translate
             client = new TranslationClient(getActivity());
 
-            rootView = inflater.inflate(R.layout.fragment_search, container, false);
             editText = (AutoCompleteTextView) rootView.findViewById(R.id.fragment_search_edittext);
             editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
             title = (TextView) rootView.findViewById(R.id.fragment_search_welcome_title_textview);
@@ -113,15 +141,9 @@ public class SearchActivity extends FragmentActivity {
 
             //launch the search on DONE button
             editText.setOnEditorActionListener(this);
-
-            //Welcome animation
-            launchWelcomeAnimation();
-
-            return rootView;
         }
 
-
-        public void startProgressBar() {
+        private void startProgressBar() {
             if (isSearching()) {
                 return;
             }
@@ -237,7 +259,7 @@ public class SearchActivity extends FragmentActivity {
         /****TextView.OnEditorActionListener****/
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
                 editText.dismissDropDown();
                 if (editText.getText().toString().length() <= 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -251,7 +273,7 @@ public class SearchActivity extends FragmentActivity {
                     client.removeTranslationsRequests();
                 }
                 startProgressBar();
-                client.translationsForExpression(editText.getText().toString(), TranslationClient.LANGUAGE.FRENCH, TranslationClient.LANGUAGE.ENGLISH, new ClientCallBack<List<Translation>>() {
+                client.translationsForExpression(editText.getText().toString(), TranslationClient.LANGUAGE.LANG1, TranslationClient.LANGUAGE.LANG2, new ClientCallBack<List<Translation>>() {
                     @Override
                     public void onResult(List<Translation> result, Error error) {
                         stopProgressBar();
@@ -279,7 +301,7 @@ public class SearchActivity extends FragmentActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            client.getSuggestion(s.toString(), TranslationClient.LANGUAGE.FRENCH, TranslationClient.LANGUAGE.ENGLISH, new ClientCallBack<String[]>() {
+            client.getSuggestion(s.toString(), TranslationClient.LANGUAGE.LANG1, TranslationClient.LANGUAGE.LANG2, new ClientCallBack<String[]>() {
                 @Override
                 public void onResult(String[] result, Error error) {
                     autoCompletionAdapter.clear();
@@ -293,6 +315,13 @@ public class SearchActivity extends FragmentActivity {
         public void afterTextChanged(Editable s) {
         }
 
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putString(KEY_SEARCH_VALUE, editText.getText().toString());
+            outState.putParcelableArrayList(KEY_RESULT_VALUE, translations);
+            outState.putBoolean(KEY_IS_SEARCHING, isSearching());
+        }
     }
 
 

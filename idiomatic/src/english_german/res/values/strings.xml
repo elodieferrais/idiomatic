@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Search Activity -->
+    <string name="language_hint_label">German or English</string>
+
+    <!-- Client -->
+    <string name="language_1">german</string>
+    <string name="language_2">english</string>
+    <string name="encoding">"ISO-8859-15"</string>
+
+</resources>

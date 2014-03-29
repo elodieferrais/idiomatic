@@ -4,12 +4,19 @@
     <string name="app_name">Idiomatic</string>
 
     <!--Search Activity -->
-    <string name="language_hint_label">French or English</string>
     <string name="welcome_screen_title">Welcome</string>
     <string name="welcome_screen_description">Idiomatic gives you real world, human-made translations in their context.</string>
     <string name="error_message_empty_search">You need to write something in the search bar if you want me to translate it.</string>
     <string name="error_title_empty_search">Something is missing&#8230;</string>
     <string name="search_no_results">No result \nAre you sure this/these word(s) exist(s)?</string>
+
+
+    <!-- Overrided-->
+    <string name="language_hint_label"></string>
+    <string name="language_1"></string>
+    <string name="language_2"></string>
+    <string name="encoding"></string>
+
 
 
 </resources>

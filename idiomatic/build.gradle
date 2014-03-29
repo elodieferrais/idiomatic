@@ -41,6 +41,36 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+    productFlavors {
+        english_french {
+            packageName "com.eferrais.idiomatic.en.fr"
+        }
+
+        english_spanish {
+            packageName "com.eferrais.idiomatic.en.sp"
+        }
+
+        english_portuguese {
+            packageName "com.eferrais.idiomatic.en.po"
+        }
+
+        english_italian {
+            packageName "com.eferrais.idiomatic.en.it"
+        }
+
+        english_german {
+            packageName "com.eferrais.idiomatic.en.ge"
+        }
+
+        english_chinese {
+            packageName "com.eferrais.idiomatic.en.ch"
+        }
+
+        english_japanese {
+            packageName "com.eferrais.idiomatic.en.ja"
+        }
+    }
 }
 
 repositories {

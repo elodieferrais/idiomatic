@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.Volley;
+import com.eferrais.idiomatic.R;
 import com.eferrais.idiomatic.model.Translation;
 
 import org.jsoup.Jsoup;
@@ -25,26 +26,28 @@ import java.util.List;
  * Created by elodieferrais on 2/27/14.
  */
 public class TranslationClient {
-    private RequestQueue requestQueue;
     private static final String REQUEST_TRANSLATION_TAG = "request:translation:tag";
     private static final String REQUEST_SUGGESTION_TAG = "request:suggestion:tag";
+    final private RequestQueue requestQueue;
+    final private Context context;
 
     public TranslationClient(Context context) {
         requestQueue = Volley.newRequestQueue(context);
+        this.context = context.getApplicationContext();
     }
 
     public enum LANGUAGE {
-        FRENCH("french"),
-        ENGLISH("english");
+        LANG1(R.string.language_1),
+        LANG2(R.string.language_2);
 
-        private String value;
+        private int resourceId;
 
-        LANGUAGE(String value) {
-            this.value = value;
+        LANGUAGE(int resourceId) {
+            this.resourceId = resourceId;
         }
 
-        public String getValue() {
-            return value;
+        public int getResourceId() {
+            return resourceId;
         }
     }
 
@@ -53,7 +56,7 @@ public class TranslationClient {
     public void translationsForExpression(final String expression, final LANGUAGE fromLang, final LANGUAGE toLang, final ClientCallBack<List<Translation>> callBack) {
         String url = null;
         try {
-            url = String.format("http://www.linguee.com/%s-%s/search?source=auto&query=%s", fromLang.getValue(), toLang.getValue(), URLEncoder.encode(expression, "UTF-8"));
+            url = String.format("http://www.linguee.com/%s-%s/search?source=auto&query=%s", context.getString(fromLang.getResourceId()), context.getString(toLang.getResourceId()), URLEncoder.encode(expression, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -69,7 +72,7 @@ public class TranslationClient {
             protected Response<List<Translation>> parseNetworkResponse(NetworkResponse networkResponse) {
                 String result = null;
                 try {
-                    result = new String(networkResponse.data, "ISO-8859-15");
+                    result = new String(networkResponse.data, context.getString(R.string.encoding));
                 } catch (UnsupportedEncodingException e) {
                     callBack.onResult(null, new Error(e.getMessage()));
                 }
@@ -109,7 +112,7 @@ public class TranslationClient {
     public void getSuggestion(String expression, final LANGUAGE fromLang, final LANGUAGE toLang, final ClientCallBack<String[]> callBack) {
         String url = null;
         try {
-            url = String.format("http://www.linguee.com/%s-%s/search?q=%s&limit=15&source=%s-%s", fromLang.getValue(), toLang.getValue(), URLEncoder.encode(expression, "UTF-8"), fromLang.getValue(), toLang.getValue());
+            url = String.format("http://www.linguee.com/%s-%s/search?q=%s&limit=15&source=%s-%s", context.getString(fromLang.getResourceId()), context.getString(toLang.getResourceId()), URLEncoder.encode(expression, "UTF-8"), context.getString(fromLang.getResourceId()), context.getString(toLang.getResourceId()));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -125,7 +128,7 @@ public class TranslationClient {
             protected Response<String[]> parseNetworkResponse(NetworkResponse networkResponse) {
                 String result = null;
                 try {
-                    result = new String(networkResponse.data, "ISO-8859-15");
+                    result = new String(networkResponse.data, context.getString(R.string.encoding));
                 } catch (UnsupportedEncodingException e) {
                     callBack.onResult(null, new Error(e.getMessage()));
                 }

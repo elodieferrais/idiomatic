@@ -12,21 +12,14 @@ import com.eferrais.idiomatic.model.Translation;
 
 import java.util.List;
 
-/**
- * Created by elodieferrais on 2/27/14.
- */
 public class TranslationsListAdapter extends ArrayAdapter<Translation> {
-    private List<Translation> translations;
-    private int resourceId;
-    private Context context;
-    private LayoutInflater inflater;
+    final private int resourceId;
+    final private LayoutInflater inflater;
 
     public TranslationsListAdapter(Context context, int resource, List<Translation> objects) {
         super(context, resource, objects);
-        this.context = context;
         this.resourceId = resource;
-        this.translations = objects;
-        this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Search Activity -->
+    <string name="language_hint_label">Italian or English</string>
+
+    <!-- Client -->
+    <string name="language_1">italian</string>
+    <string name="language_2">english</string>
+    <string name="encoding">"UTF-8"</string>
+</resources>
