@@ -2,6 +2,7 @@ package com.eferrais.idiomatic.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.Html;
 import android.text.Spanned;
 import android.text.SpannedString;
 
@@ -9,19 +10,19 @@ import android.text.SpannedString;
  * Created by elodieferrais on 2/27/14.
  */
 public class Translation implements Parcelable {
-    private Spanned initialText;
-    private Spanned translatedText;
+    private String initialText;
+    private String translatedText;
 
-    public Spanned getInitialText() {
+    public String getInitialText() {
         return initialText;
     }
 
-    public Translation(Spanned initialText, Spanned translatedText) {
+    public Translation(String initialText, String translatedText) {
         this.initialText = initialText;
         this.translatedText = translatedText;
     }
 
-    public Spanned getTranslatedText() {
+    public String getTranslatedText() {
         return translatedText;
     }
 
@@ -32,8 +33,8 @@ public class Translation implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(initialText.toString());
-        dest.writeString(translatedText.toString());
+        dest.writeString(initialText);
+        dest.writeString(translatedText);
     }
 
     public static final Parcelable.Creator<Translation> CREATOR
@@ -49,7 +50,7 @@ public class Translation implements Parcelable {
     };
 
     private Translation(Parcel in) {
-        initialText = SpannedString.valueOf(in.readString());
-        translatedText = SpannedString.valueOf(in.readString());
+        initialText = in.readString();
+        translatedText = in.readString();
     }
 }

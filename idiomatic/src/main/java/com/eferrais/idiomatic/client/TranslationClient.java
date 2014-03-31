@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.Volley;
 import com.eferrais.idiomatic.R;
+import com.eferrais.idiomatic.UI.ClassStyle;
 import com.eferrais.idiomatic.model.Translation;
 
 import org.jsoup.Jsoup;
@@ -21,6 +22,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by elodieferrais on 2/27/14.
@@ -86,7 +89,7 @@ public class TranslationClient {
                 List<Translation> translations = new ArrayList<Translation>(Math.min(lefts.size(), rights.size()));
                 if (lefts != null && rights != null) {
                     for (int i = 0; i < Math.min(lefts.size(), rights.size()); i++) {
-                        Translation translation = new Translation(Html.fromHtml(treatString(lefts.get(i).html())), Html.fromHtml(treatString(rights.get(i).html())));
+                        Translation translation = new Translation(treatString(lefts.get(i).html()), treatString(rights.get(i).html()));
                         translations.add(translation);
                     }
                 }
@@ -105,8 +108,22 @@ public class TranslationClient {
 
     private String treatString(String string) {
         String updated = string.replaceAll("[\\r\\n\\w\\.-]+\\.[\\w]{1,3}", "");
-        String noHtml = updated.toString().replaceAll("\\<.*?>","");
-        return noHtml.replaceAll("\n " , "");
+        updated = updated.toString().replaceAll("<(?!b|/b).*?>","");
+        updated = updated.replaceAll("\n ?" , "");
+        updated = updated.replaceAll("<b", "<span");
+        updated = updated.replaceAll("</b", "</span");
+
+        Pattern specialCharacterPattern = Pattern.compile("&.*?;");
+        Matcher matcher = specialCharacterPattern.matcher(updated);
+        int indexDiff = 0;
+        while (matcher.find()) {
+            String escapedString = updated.substring(matcher.start() - indexDiff, matcher.end() - indexDiff);
+            String unescapedString = Html.fromHtml(escapedString).toString();
+            updated = updated.replaceFirst(escapedString, unescapedString);
+            indexDiff += escapedString.length() - unescapedString.length();
+        }
+        return updated.trim();
+
     }
 
     public void getSuggestion(String expression, final LANGUAGE fromLang, final LANGUAGE toLang, final ClientCallBack<String[]> callBack) {

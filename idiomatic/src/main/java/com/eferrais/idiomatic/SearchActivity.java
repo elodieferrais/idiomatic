@@ -1,6 +1,7 @@
 package com.eferrais.idiomatic;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +27,7 @@ import com.eferrais.idiomatic.client.TranslationClient;
 import com.eferrais.idiomatic.model.Translation;
 
 import net.yscs.android.square_progressbar.SquareProgressBar;
+import net.yscs.android.square_progressbar.utils.ColourUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,7 +49,6 @@ public class SearchActivity extends FragmentActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-
     }
 
     /**
