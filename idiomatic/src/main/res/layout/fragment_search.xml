@@ -25,15 +25,15 @@
 
         <ListView
             android:id="@+id/fragment_search_listview"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
             android:dividerHeight="10dip"
             android:scrollbars="vertical"
             android:divider="@android:color/transparent"
             android:paddingBottom="@dimen/activity_margin"
-            android:clipToPadding="false"/>
-
+            android:clipToPadding="false"
+            />
 
     </LinearLayout>
 

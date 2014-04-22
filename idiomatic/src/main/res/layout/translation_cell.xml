@@ -9,8 +9,7 @@
     <TextView
         android:id="@+id/translation_cell_initial_textview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textIsSelectable="true"/>
+        android:layout_height="wrap_content"/>
 
     <View
         android:layout_width="match_parent"
@@ -24,7 +23,6 @@
     <TextView
         android:id="@+id/translation_cell_translated_textview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textIsSelectable="true"/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
