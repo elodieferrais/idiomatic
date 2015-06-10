@@ -2,9 +2,20 @@
 
     <!-- Base application theme. -->
 
-    <style name="IdiomaticTheme" parent="android:Theme.Light.NoTitleBar">
+    <style name="IdiomaticTheme" parent="android:Theme.Holo.Light.NoActionBar">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:windowBackground">@color/window_background</item>
+
     </style>
+
+    <style name="about_text_style" parent="android:TextAppearance.Holo.Medium">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="menu_style" parent="android:Widget.Holo.Light.ListPopupWindow">
+        <item name="android:background">@drawable/selectable_background</item>
+
+    </style>
+
 
 </resources>

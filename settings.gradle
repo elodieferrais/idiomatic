@@ -1,1 +1,2 @@
-include ':idiomatic'
+include ':idiomatic', ':EasyAutocompleteLibrary'
+project(':EasyAutocompleteLibrary').projectDir = new File(settingsDir, "../EasyAutocompleteLibrary")

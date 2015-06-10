@@ -5,11 +5,13 @@
 
     <!--Search Activity -->
     <string name="welcome_screen_title">Welcome</string>
-    <string name="welcome_screen_description">Idiomatic gives you real world, human-made translations in their context.</string>
+    <string name="welcome_screen_description">Idiomatic allows you to translate expressions and see them in their context.</string>
     <string name="error_message_empty_search">You need to write something in the search bar if you want me to translate it.</string>
     <string name="error_title_empty_search">Something is missing&#8230;</string>
     <string name="search_no_results">No result \nAre you sure this/these word(s) exist(s)?</string>
-
+    <string name="about_description">Design: Florent Crivello\nCode: Elodie Ferrais\nTranslations from Linguee\n\nWe\'ve crafted Idiomatic with love, solely motivated by the use we would ourselves make of it (plus the fortune and glory) . Because like you, we\'ve often found myself in situations where translating a single word wasn\'t enough.\n\nWe did our very best - because we love you, dear user - but if you have any comment to make about Idiomatic, feel free to drop us an email at the address elodie.ferrais@gmail.com (or using the button below).</string>
+    <string name="about_mail_button">Send us an email</string>
+    <string name="menu_about">About</string>
 
     <!-- Overrided-->
     <string name="language_hint_label"></string>

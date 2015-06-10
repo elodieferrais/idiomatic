@@ -10,19 +10,34 @@
         android:layout_marginTop="@dimen/activity_margin"
         android:layout_marginRight="@dimen/activity_margin"
         android:layout_marginLeft="@dimen/activity_margin"
-        tools:context="com.eferrais.idiomatic.SearchActivity$PlaceholderFragment">
+        tools:context="com.eferrais.idiomatic.SearchActivity.SearchFragment">
 
-        <AutoCompleteTextView
-            android:id="@+id/fragment_search_edittext"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/textfield_default"
+            android:orientation="horizontal"
+            android:gravity="center"
             android:layout_marginBottom="@dimen/activity_margin"
+            >
+        <com.elodieferrais.mobile.android.asyncautocompletelibrary.EasyAutoCompleteTextView
+            android:id="@+id/fragment_search_edittext"
+            android:layout_width="match_parent"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textfield_default"
             android:singleLine="true"
+            android:layout_weight="1"
             android:fontFamily="sans-serif-regular"
             android:hint="@string/language_hint_label"
             android:gravity="center"/>
-
+            <ImageButton
+                android:id="@+id/fragment_search_info_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_dialog_info"
+                />
+        </LinearLayout>
         <ListView
             android:id="@+id/fragment_search_listview"
             android:layout_width="match_parent"

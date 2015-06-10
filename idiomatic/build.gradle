@@ -11,12 +11,12 @@ apply plugin: 'android'
 apply plugin: 'crashlytics'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.0.1"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 19
+        minSdkVersion 17
+        targetSdkVersion 22
         versionCode 2
         versionName "1.0.1"
     }
@@ -26,50 +26,50 @@ android {
             storeFile file (debugKeystore)
         }
 
-        release {
+        /**release {
             storeFile file(idiomaticStoreFile)
             storePassword idiomaticStorePassword
             keyAlias idiomaticKeyAlias
             keyPassword idiomaticKeyPassword
-        }
+        }**/
     }
 
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
         }
     }
 
     productFlavors {
         english_french {
-            packageName "com.eferrais.idiomatic.en.fr"
+            applicationId "com.eferrais.idiomatic.en.fr"
         }
 
-        english_spanish {
-            packageName "com.eferrais.idiomatic.en.sp"
+        /**english_spanish {
+            applicationId "com.eferrais.idiomatic.en.sp"
         }
 
         english_portuguese {
-            packageName "com.eferrais.idiomatic.en.po"
+            applicationId "com.eferrais.idiomatic.en.po"
         }
 
         english_italian {
-            packageName "com.eferrais.idiomatic.en.it"
+            applicationId "com.eferrais.idiomatic.en.it"
         }
 
         english_german {
-            packageName "com.eferrais.idiomatic.en.ge"
+            applicationId "com.eferrais.idiomatic.en.ge"
         }
 
         english_chinese {
-            packageName "com.eferrais.idiomatic.en.ch"
+            applicationId "com.eferrais.idiomatic.en.ch"
         }
 
         english_japanese {
-            packageName "com.eferrais.idiomatic.en.ja"
-        }
+            applicationId "com.eferrais.idiomatic.en.ja"
+        }**/
     }
 }
 
@@ -83,12 +83,13 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.0.1'
+    compile 'com.android.support:support-v4:22.2.0'
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.mcxiaoke.volley:library-aar:1.0.+'
     compile 'org.jsoup:jsoup:1.7.+'
     compile 'net.yscs.android:square_progressbar:1.3.0'
     compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     compile 'com.crashlytics.android:crashlytics:1.+'
+    compile project(':EasyAutocompleteLibrary')
 
 }
